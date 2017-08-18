@@ -2,6 +2,10 @@ module Main exposing (main)
 
 import Html exposing(..)
 
+type Status
+  = Open
+  | Closed
+
 fruitList : List String
 fruitList =
   [ "apple"
@@ -15,10 +19,10 @@ dropdownItem : String -> Html a
 dropdownItem fruit =
   li [] [ text fruit ]
 
-view : List String -> Html a
-view fruits =
-  ul [] (List.map dropdownItem fruits)
+view : { status: Status, items : List String } -> Html a
+view model =
+  ul [] (List.map dropdownItem model.items)
 
 main : Html a
 main =
-  view fruitList
+  view { status = Open, items = fruitList }
