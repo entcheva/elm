@@ -11,10 +11,10 @@ fruitList =
   , "melon"
   ]
 
-dropdownItem : String - > Html a
+dropdownItem : String -> Html a
 dropdownItem fruit =
   li [] [ text fruit ]
 
 main : Html a
 main =
-  text "Hello World"
+  ul [] (List.map dropdownItem fruitList)
