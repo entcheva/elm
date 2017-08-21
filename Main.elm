@@ -1,10 +1,30 @@
 module Main exposing (main)
 
+
 import Html exposing(..)
+import Html.Events exposing (onClick)
+
+
+main =
+  Html.beginnerProgram
+    { model = initialModel
+    , view = view
+    , update = update
+    }
+
 
 type Status
   = Open
   | Closed
+
+
+type alias Model =
+  { status : Status, items : List String }
+
+
+initialModel : Model
+initialModel = { status = Open, items = fruitList }
+
 
 fruitList : List String
 fruitList =
@@ -15,14 +35,43 @@ fruitList =
   , "melon"
   ]
 
-dropdownItem : String -> Html a
-dropdownItem fruit =
-  li [] [ text fruit ]
 
-view : { status: Status, items : List String } -> Html a
+view : Model -> Html Msg
 view model =
-  ul [] (List.map dropdownItem model.items)
+  case model.status of
+  Open ->
+    viewOpen model
 
-main : Html a
-main =
-  view { status = Open, items = fruitList }
+  Closed ->
+    viewClosed
+
+
+viewOpen : Model -> Html Msg
+viewOpen model =
+  div []
+    [ p  [ onClick CloseDropdown ] [ text "Click to toggle" ]
+    , ul [] (List.map dropdownItem model.items)
+    ]
+
+
+viewClosed : Html Msg
+viewClosed =
+  div []
+    [ p [ onClick OpenDropdown ] [ text "Click to toggle" ]
+    ]
+
+
+dropdownItem : String -> Html a
+dropdownItem value =
+  li [] [ text value ]
+
+
+type Msg = OpenDropdown | CloseDropdown
+
+
+update : Msg -> Model -> Model
+update msg model =
+  case msg of
+    CloseDropdown -> { model | status = Closed }
+
+    OpenDropdown -> { model | status = Open }
